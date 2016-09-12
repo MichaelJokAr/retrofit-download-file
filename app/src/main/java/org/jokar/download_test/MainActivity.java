@@ -20,6 +20,8 @@ import org.jokar.download_test.utils.StringUtils;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     public static final String MESSAGE_PROGRESS = "message_progress";
+    private LocalBroadcastManager bManager;
+
 
     private AppCompatButton btn_download;
     private ProgressBar progress;
@@ -73,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void registerReceiver() {
 
-        LocalBroadcastManager bManager = LocalBroadcastManager.getInstance(this);
+        bManager = LocalBroadcastManager.getInstance(this);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(MESSAGE_PROGRESS);
         bManager.registerReceiver(broadcastReceiver, intentFilter);
@@ -83,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(broadcastReceiver);
+        //解除注册时，使用注册时的manager解绑
+        bManager.unregisterReceiver(broadcastReceiver);
     }
 }
