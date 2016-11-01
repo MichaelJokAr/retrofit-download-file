@@ -33,8 +33,10 @@ public class DownloadService extends IntentService {
     private NotificationCompat.Builder notificationBuilder;
     private NotificationManager notificationManager;
 
+    int downloadCount = 0;
 
-    private String apkUrl = "http://download.fir.im/v2/app/install/58189e35959d696d8a001395?download_token=df20c2ae1e6332baa6a4f6a5ac264747";
+    //    private String apkUrl = "http://download.fir.im/v2/app/install/58189e35959d696d8a001395?download_token=df20c2ae1e6332baa6a4f6a5ac264747";
+    private String apkUrl = "http://download.fir.im/v2/app/install/5548713eaeea34070300000c?download_token=f7dc75d02451afb2d143d7f26c30d144";
 
     public DownloadService() {
         super("DownloadService");
@@ -61,13 +63,16 @@ public class DownloadService extends IntentService {
         DownloadProgressListener listener = new DownloadProgressListener() {
             @Override
             public void update(long bytesRead, long contentLength, boolean done) {
-                Download download = new Download();
-                download.setTotalFileSize(contentLength);
-                download.setCurrentFileSize(bytesRead);
+                //不频繁发送通知，防止通知栏下拉卡顿
                 int progress = (int) ((bytesRead * 100) / contentLength);
-                download.setProgress(progress);
+                if ((downloadCount == 0) || progress > downloadCount) {
+                    Download download = new Download();
+                    download.setTotalFileSize(contentLength);
+                    download.setCurrentFileSize(bytesRead);
+                    download.setProgress(progress);
 
-                sendNotification(download);
+                    sendNotification(download);
+                }
             }
         };
         outputFile = new File(Environment.getExternalStoragePublicDirectory
