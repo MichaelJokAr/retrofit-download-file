@@ -35,7 +35,7 @@ public class DownloadService extends IntentService {
 
     int downloadCount = 0;
 
-    private String apkUrl = "http://download.fir.im/v2/app/install/58189e35959d696d8a001395?download_token=df20c2ae1e6332baa6a4f6a5ac264747";
+    private String apkUrl = "http://download.fir.im/v2/app/install/5818acbcca87a836f50014af?download_token=a01301d7f6f8f4957643c3fcfe5ba6ff";
 
     public DownloadService() {
         super("DownloadService");
