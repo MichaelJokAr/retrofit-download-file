@@ -17,6 +17,9 @@ import org.jokar.download_test.bean.Download;
 import org.jokar.download_test.service.DownloadService;
 import org.jokar.download_test.utils.StringUtils;
 
+import rx.Observable;
+import rx.Subscriber;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     public static final String MESSAGE_PROGRESS = "message_progress";

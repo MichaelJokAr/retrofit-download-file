@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -21,6 +22,8 @@ import java.io.File;
 
 import rx.Subscriber;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 /**
  * Created by JokAr on 16/7/5.
  */
@@ -31,11 +34,13 @@ public class DownloadService extends IntentService {
     private NotificationManager notificationManager;
 
 
-    private String apkUrl = "http://download.fir.im/v2/app/install/572eec6fe75e2d7a05000008?download_token=572bcb03dad2eed7c758670fd23b5ac4";
+    private String apkUrl = "http://download.fir.im/v2/app/install/58189e35959d696d8a001395?download_token=df20c2ae1e6332baa6a4f6a5ac264747";
 
     public DownloadService() {
         super("DownloadService");
     }
+
+    private File outputFile;
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -65,8 +70,14 @@ public class DownloadService extends IntentService {
                 sendNotification(download);
             }
         };
-        File outputFile = new File(Environment.getExternalStoragePublicDirectory
+        outputFile = new File(Environment.getExternalStoragePublicDirectory
                 (Environment.DIRECTORY_DOWNLOADS), "file.apk");
+
+        if (outputFile.exists()) {
+            outputFile.delete();
+        }
+
+
         String baseUrl = StringUtils.getHostName(apkUrl);
 
         new DownloadAPI(baseUrl, listener).downloadAPK(apkUrl, outputFile, new Subscriber() {
@@ -98,6 +109,12 @@ public class DownloadService extends IntentService {
         notificationBuilder.setProgress(0, 0, false);
         notificationBuilder.setContentText("File Downloaded");
         notificationManager.notify(0, notificationBuilder.build());
+
+        //安装apk
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+        intent.setDataAndType(Uri.fromFile(outputFile), "application/vnd.android.package-archive");
+        startActivity(intent);
     }
 
     private void sendNotification(Download download) {
