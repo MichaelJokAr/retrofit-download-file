@@ -4,11 +4,11 @@ import android.app.IntentService;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.jokar.download_test.MainActivity;
 import org.jokar.download_test.R;
@@ -19,29 +19,22 @@ import org.jokar.download_test.utils.StringUtils;
 
 import java.io.File;
 
-
 import rx.Subscriber;
-
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * Created by JokAr on 16/7/5.
  */
 public class DownloadService extends IntentService {
     private static final String TAG = "DownloadService";
-
+    int downloadCount = 0;
     private NotificationCompat.Builder notificationBuilder;
     private NotificationManager notificationManager;
-
-    int downloadCount = 0;
-
     private String apkUrl = "http://download.fir.im/v2/app/install/595c5959959d6901ca0004ac?download_token=1a9dfa8f248b6e45ea46bc5ed96a0a9e&source=update";
+    private File outputFile;
 
     public DownloadService() {
         super("DownloadService");
     }
-
-    private File outputFile;
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -115,10 +108,7 @@ public class DownloadService extends IntentService {
         notificationManager.notify(0, notificationBuilder.build());
 
         //安装apk
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-        intent.setDataAndType(Uri.fromFile(outputFile), "application/vnd.android.package-archive");
-        startActivity(intent);
+        Toast.makeText(getApplicationContext(), "Download Success", Toast.LENGTH_SHORT).show();
     }
 
     private void sendNotification(Download download) {

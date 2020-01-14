@@ -2,11 +2,10 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.0"
 
     defaultConfig {
         applicationId "org.jokar.download_test"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -17,18 +16,27 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.0.0'
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation 'junit:junit:4.12'
+    api 'com.android.support:appcompat-v7:24.0.0'
     //rxJava
-    compile 'io.reactivex:rxjava:latest.release'
-    compile 'io.reactivex:rxandroid:latest.release'
+    api 'io.reactivex:rxjava:latest.release'
+    api 'io.reactivex:rxandroid:latest.release'
     //network - squareup
-    compile 'com.squareup.retrofit2:retrofit:latest.release'
-    compile 'com.squareup.retrofit2:adapter-rxjava:latest.release'
-    compile 'com.squareup.okhttp3:okhttp:latest.release'
-    compile 'com.squareup.okhttp3:logging-interceptor:latest.release'
+    api 'com.squareup.retrofit2:retrofit:latest.release'
+    api 'com.squareup.retrofit2:adapter-rxjava:latest.release'
+    api 'com.squareup.okhttp3:okhttp:latest.release'
+    api 'com.squareup.okhttp3:logging-interceptor:latest.release'
+
+    implementation('com.github.jokar:permission:latest.release') {
+        exclude group: 'com.android.support'
+    }
 }
